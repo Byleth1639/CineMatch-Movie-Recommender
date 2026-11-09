@@ -1,0 +1,258 @@
+movieId,title,genres
+1,Inception (2010),Action|Sci-Fi|Thriller
+2,Interstellar (2014),Adventure|Drama|Sci-Fi
+3,The Dark Knight (2008),Action|Crime|Drama
+4,The Dark Knight Rises (2012),Action|Crime|Drama
+5,Batman Begins (2005),Action|Crime|Drama
+6,The Prestige (2006),Drama|Mystery|Sci-Fi
+7,Memento (2000),Mystery|Thriller
+8,Dunkirk (2017),Action|Drama|War
+9,Oppenheimer (2023),Drama
+10,Tenet (2020),Action|Sci-Fi|Thriller
+11,The Matrix (1999),Action|Sci-Fi|Thriller
+12,The Matrix Reloaded (2003),Action|Sci-Fi|Thriller
+13,Blade Runner (1982),Sci-Fi|Thriller
+14,Blade Runner 2049 (2017),Drama|Sci-Fi|Thriller
+15,Arrival (2016),Drama|Mystery|Sci-Fi
+16,Dune (2021),Adventure|Drama|Sci-Fi
+17,Dune: Part Two (2024),Action|Adventure|Sci-Fi
+18,Ex Machina (2014),Drama|Sci-Fi|Thriller
+19,Her (2013),Drama|Romance|Sci-Fi
+20,The Martian (2015),Adventure|Drama|Sci-Fi
+21,Gravity (2013),Drama|Sci-Fi|Thriller
+22,2001: A Space Odyssey (1968),Adventure|Sci-Fi
+23,Star Wars: A New Hope (1977),Action|Adventure|Sci-Fi
+24,Star Wars: The Empire Strikes Back (1980),Action|Adventure|Sci-Fi
+25,Star Wars: Return of the Jedi (1983),Action|Adventure|Sci-Fi
+26,Rogue One: A Star Wars Story (2016),Action|Adventure|Sci-Fi
+27,Guardians of the Galaxy (2014),Action|Adventure|Comedy|Sci-Fi
+28,Avengers: Infinity War (2018),Action|Adventure|Sci-Fi
+29,Avengers: Endgame (2019),Action|Adventure|Sci-Fi
+30,Iron Man (2008),Action|Adventure|Sci-Fi
+31,Spider-Man: Into the Spider-Verse (2018),Action|Adventure|Animation
+32,Spider-Man: Across the Spider-Verse (2023),Action|Adventure|Animation
+33,Everything Everywhere All at Once (2022),Action|Adventure|Comedy|Sci-Fi
+34,Back to the Future (1985),Adventure|Comedy|Sci-Fi
+35,Jurassic Park (1993),Action|Adventure|Sci-Fi
+36,E.T. the Extra-Terrestrial (1982),Children|Drama|Sci-Fi
+37,The Terminator (1984),Action|Sci-Fi|Thriller
+38,Terminator 2: Judgment Day (1991),Action|Sci-Fi|Thriller
+39,Alien (1979),Horror|Sci-Fi
+40,Aliens (1986),Action|Horror|Sci-Fi
+41,Predator (1987),Action|Horror|Sci-Fi
+42,District 9 (2009),Action|Sci-Fi|Thriller
+43,Edge of Tomorrow (2014),Action|Sci-Fi
+44,Minority Report (2002),Action|Crime|Mystery|Sci-Fi
+45,Looper (2012),Action|Crime|Sci-Fi
+46,Children of Men (2006),Adventure|Drama|Sci-Fi
+47,Snowpiercer (2013),Action|Drama|Sci-Fi
+48,The Hunger Games (2012),Action|Adventure|Sci-Fi
+49,Ready Player One (2018),Action|Adventure|Sci-Fi
+50,The Fifth Element (1997),Action|Adventure|Sci-Fi
+51,The Lord of the Rings: The Fellowship of the Ring (2001),Adventure|Fantasy
+52,The Lord of the Rings: The Two Towers (2002),Adventure|Fantasy
+53,The Lord of the Rings: The Return of the King (2003),Adventure|Fantasy
+54,The Hobbit: An Unexpected Journey (2012),Adventure|Fantasy
+55,Harry Potter and the Sorcerer's Stone (2001),Adventure|Children|Fantasy
+56,Harry Potter and the Prisoner of Azkaban (2004),Adventure|Fantasy|Mystery
+57,Harry Potter and the Deathly Hallows: Part 2 (2011),Adventure|Fantasy
+58,"The Chronicles of Narnia: The Lion, the Witch and the Wardrobe (2005)",Adventure|Children|Fantasy
+59,Pirates of the Caribbean: The Curse of the Black Pearl (2003),Action|Adventure|Fantasy
+60,Pan's Labyrinth (2006),Drama|Fantasy|War
+61,The Princess Bride (1987),Adventure|Comedy|Fantasy|Romance
+62,Spirited Away (2001),Adventure|Animation|Fantasy
+63,Howl's Moving Castle (2004),Adventure|Animation|Fantasy|Romance
+64,Princess Mononoke (1997),Action|Adventure|Animation|Fantasy
+65,My Neighbor Totoro (1988),Animation|Children|Fantasy
+66,Kiki's Delivery Service (1989),Animation|Children|Fantasy
+67,Your Name. (2016),Animation|Drama|Fantasy|Romance
+68,A Silent Voice (2016),Animation|Drama|Romance
+69,Weathering with You (2019),Animation|Drama|Fantasy|Romance
+70,Suzume (2022),Adventure|Animation|Fantasy
+71,The Boy and the Heron (2023),Adventure|Animation|Fantasy
+72,WALL-E (2008),Adventure|Animation|Children|Sci-Fi
+73,Inside Out (2015),Adventure|Animation|Comedy|Drama
+74,Inside Out 2 (2024),Adventure|Animation|Comedy|Drama
+75,Up (2009),Adventure|Animation|Comedy|Drama
+76,Coco (2017),Adventure|Animation|Drama|Fantasy
+77,Soul (2020),Adventure|Animation|Comedy|Fantasy
+78,Ratatouille (2007),Animation|Children|Comedy
+79,The Incredibles (2004),Action|Adventure|Animation
+80,Toy Story (1995),Adventure|Animation|Children|Comedy
+81,Toy Story 3 (2010),Adventure|Animation|Children|Comedy
+82,Finding Nemo (2003),Adventure|Animation|Children
+83,Finding Dory (2016),Adventure|Animation|Comedy
+84,Shrek (2001),Adventure|Animation|Comedy|Fantasy
+85,Kung Fu Panda (2008),Action|Animation|Comedy
+86,Puss in Boots: The Last Wish (2022),Adventure|Animation|Comedy|Fantasy
+87,The Lion King (1994),Adventure|Animation|Drama
+88,Frozen (2013),Adventure|Animation|Fantasy|Musical
+89,Zootopia (2016),Adventure|Animation|Comedy|Crime
+90,Parasite (2019),Comedy|Drama|Thriller
+91,Memories of Murder (2003),Crime|Drama|Mystery|Thriller
+92,The Wailing (2016),Horror|Mystery|Thriller
+93,Oldboy (2003),Action|Drama|Mystery|Thriller
+94,The Handmaiden (2016),Drama|Romance|Thriller
+95,Train to Busan (2016),Action|Horror|Thriller
+96,Minari (2020),Drama
+97,Decision to Leave (2022),Drama|Mystery|Romance
+98,Past Lives (2023),Drama|Romance
+99,The Social Network (2010),Drama
+100,Steve Jobs (2015),Drama
+101,The Imitation Game (2014),Drama|Thriller|War
+102,A Beautiful Mind (2001),Drama|Romance
+103,The Theory of Everything (2014),Drama|Romance
+104,The Pursuit of Happyness (2006),Drama
+105,Good Will Hunting (1997),Drama|Romance
+106,Dead Poets Society (1989),Drama
+107,Whiplash (2014),Drama
+108,La La Land (2016),Comedy|Drama|Musical|Romance
+109,The Greatest Showman (2017),Drama|Musical
+110,"Tick, Tick... Boom! (2021)",Drama|Musical
+111,A Star Is Born (2018),Drama|Musical|Romance
+112,The Notebook (2004),Drama|Romance
+113,Pride & Prejudice (2005),Drama|Romance
+114,Eternal Sunshine of the Spotless Mind (2004),Drama|Romance|Sci-Fi
+115,Before Sunrise (1995),Drama|Romance
+116,Before Sunset (2004),Drama|Romance
+117,Before Midnight (2013),Drama|Romance
+118,500 Days of Summer (2009),Comedy|Drama|Romance
+119,Crazy Rich Asians (2018),Comedy|Romance
+120,The Big Sick (2017),Comedy|Drama|Romance
+121,Notting Hill (1999),Comedy|Romance
+122,10 Things I Hate About You (1999),Comedy|Romance
+123,The Devil Wears Prada (2006),Comedy|Drama
+124,Legally Blonde (2001),Comedy|Romance
+125,Mean Girls (2004),Comedy
+126,Superbad (2007),Comedy
+127,The Hangover (2009),Comedy
+128,Game Night (2018),Action|Comedy|Crime
+129,Knives Out (2019),Comedy|Crime|Mystery
+130,Glass Onion: A Knives Out Mystery (2022),Comedy|Crime|Mystery
+131,The Grand Budapest Hotel (2014),Comedy|Drama
+132,The Royal Tenenbaums (2001),Comedy|Drama
+133,Jojo Rabbit (2019),Comedy|Drama|War
+134,Little Miss Sunshine (2006),Comedy|Drama
+135,The Truman Show (1998),Comedy|Drama|Sci-Fi
+136,The Secret Life of Walter Mitty (2013),Adventure|Comedy|Drama
+137,Forrest Gump (1994),Comedy|Drama|Romance
+138,The Shawshank Redemption (1994),Crime|Drama
+139,The Green Mile (1999),Crime|Drama|Fantasy
+140,The Godfather (1972),Crime|Drama
+141,The Godfather Part II (1974),Crime|Drama
+142,Goodfellas (1990),Crime|Drama
+143,The Departed (2006),Crime|Drama|Thriller
+144,Heat (1995),Action|Crime|Drama
+145,The Irishman (2019),Crime|Drama
+146,The Wolf of Wall Street (2013),Comedy|Crime|Drama
+147,Catch Me If You Can (2002),Crime|Drama
+148,Ocean's Eleven (2001),Crime|Thriller
+149,Pulp Fiction (1994),Comedy|Crime|Drama
+150,Reservoir Dogs (1992),Crime|Mystery|Thriller
+151,Django Unchained (2012),Drama|Western
+152,Inglourious Basterds (2009),Action|Drama|War
+153,Once Upon a Time in Hollywood (2019),Comedy|Drama
+154,Kill Bill: Vol. 1 (2003),Action|Crime|Thriller
+155,Kill Bill: Vol. 2 (2004),Action|Crime|Thriller
+156,Fight Club (1999),Action|Crime|Drama|Thriller
+157,Se7en (1995),Crime|Mystery|Thriller
+158,Zodiac (2007),Crime|Drama|Mystery|Thriller
+159,Gone Girl (2014),Drama|Mystery|Thriller
+160,Prisoners (2013),Crime|Drama|Mystery|Thriller
+161,Shutter Island (2010),Drama|Mystery|Thriller
+162,The Silence of the Lambs (1991),Crime|Horror|Thriller
+163,The Sixth Sense (1999),Drama|Horror|Mystery
+164,Get Out (2017),Horror|Mystery|Thriller
+165,Us (2019),Horror|Mystery|Thriller
+166,Nope (2022),Horror|Mystery|Sci-Fi
+167,A Quiet Place (2018),Drama|Horror|Sci-Fi|Thriller
+168,Hereditary (2018),Drama|Horror|Mystery
+169,Midsommar (2019),Drama|Horror|Mystery
+170,The Conjuring (2013),Horror|Mystery|Thriller
+171,It (2017),Drama|Horror|Thriller
+172,The Babadook (2014),Drama|Horror|Thriller
+173,The Witch (2015),Horror|Mystery
+174,The Shining (1980),Horror
+175,Doctor Sleep (2019),Drama|Horror
+176,Scream (1996),Comedy|Horror|Mystery
+177,The Exorcist (1973),Horror
+178,Jaws (1975),Adventure|Horror|Thriller
+179,Black Swan (2010),Drama|Thriller
+180,Nightcrawler (2014),Crime|Drama|Thriller
+181,Drive (2011),Action|Crime|Drama
+182,Baby Driver (2017),Action|Crime|Music|Thriller
+183,John Wick (2014),Action|Crime|Thriller
+184,John Wick: Chapter 4 (2023),Action|Crime|Thriller
+185,Mission: Impossible – Fallout (2018),Action|Adventure|Thriller
+186,Top Gun: Maverick (2022),Action|Drama
+187,Mad Max: Fury Road (2015),Action|Adventure|Sci-Fi
+188,Furiosa: A Mad Max Saga (2024),Action|Adventure|Sci-Fi
+189,The Bourne Identity (2002),Action|Mystery|Thriller
+190,Casino Royale (2006),Action|Adventure|Thriller
+191,Skyfall (2012),Action|Adventure|Thriller
+192,The Batman (2022),Action|Crime|Drama
+193,Joker (2019),Crime|Drama|Thriller
+194,Logan (2017),Action|Drama|Sci-Fi
+195,The Avengers (2012),Action|Adventure|Sci-Fi
+196,Black Panther (2018),Action|Adventure|Sci-Fi
+197,Wonder Woman (2017),Action|Adventure|Fantasy
+198,1917 (2019),Drama|War
+199,Saving Private Ryan (1998),Action|Drama|War
+200,Schindler's List (1993),Drama|War
+201,The Pianist (2002),Drama|War
+202,All Quiet on the Western Front (2022),Action|Drama|War
+203,The Hurt Locker (2008),Drama|Thriller|War
+204,Apocalypse Now (1979),Drama|War
+205,The Revenant (2015),Adventure|Drama|Western
+206,No Country for Old Men (2007),Crime|Drama|Thriller|Western
+207,There Will Be Blood (2007),Drama
+208,The Power of the Dog (2021),Drama|Western
+209,The Hateful Eight (2015),Mystery|Thriller|Western
+210,"The Good, the Bad and the Ugly (1966)",Adventure|Western
+211,12 Angry Men (1957),Drama
+212,Citizen Kane (1941),Drama|Mystery
+213,Casablanca (1942),Drama|Romance|War
+214,Rear Window (1954),Mystery|Thriller
+215,Vertigo (1958),Drama|Mystery|Romance|Thriller
+216,Psycho (1960),Horror|Mystery|Thriller
+217,One Flew Over the Cuckoo's Nest (1975),Drama
+218,Rocky (1976),Drama
+219,Raging Bull (1980),Drama
+220,The King's Speech (2010),Drama
+221,The Shape of Water (2017),Drama|Fantasy|Romance
+222,The Favourite (2018),Comedy|Drama
+223,Poor Things (2023),Comedy|Drama|Romance|Sci-Fi
+224,Barbie (2023),Adventure|Comedy|Fantasy
+225,The Holdovers (2023),Comedy|Drama
+226,American Fiction (2023),Comedy|Drama
+227,Anatomy of a Fall (2023),Crime|Drama|Thriller
+228,The Zone of Interest (2023),Drama|War
+229,The Boy in the Striped Pajamas (2008),Drama|War
+230,Hidden Figures (2016),Drama
+231,The Big Short (2015),Comedy|Drama
+232,Moneyball (2011),Drama
+233,Ford v Ferrari (2019),Action|Drama
+234,Rush (2013),Action|Drama
+235,The Iron Claw (2023),Drama
+236,The Wrestler (2008),Drama
+237,Creed (2015),Drama
+238,Remember the Titans (2000),Drama
+239,The Blind Side (2009),Drama
+240,The Intouchables (2011),Comedy|Drama
+241,Amélie (2001),Comedy|Romance
+242,The Lives of Others (2006),Drama|Thriller
+243,City of God (2002),Crime|Drama
+244,Roma (2018),Drama
+245,The Farewell (2019),Comedy|Drama
+246,The Florida Project (2017),Drama
+247,Moonlight (2016),Drama
+248,Lady Bird (2017),Comedy|Drama
+249,Little Women (2019),Drama|Romance
+250,Marriage Story (2019),Drama
+251,Manchester by the Sea (2016),Drama
+252,Aftersun (2022),Drama
+253,The Whale (2022),Drama
+254,The Menu (2022),Comedy|Horror|Thriller
+255,Triangle of Sadness (2022),Comedy|Drama
+256,The Lobster (2015),Comedy|Drama|Romance|Sci-Fi
+257,The Killing of a Sacred Deer (2017),Drama|Horror|Mystery

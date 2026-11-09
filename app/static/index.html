@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#10101c" />
+  <meta name="description" content="Discover your next favorite movie with a transparent machine learning recommender." />
+  <title>CineMatch — Movies made for your taste</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="CineMatch home">
+        <span class="brand-icon" aria-hidden="true"><svg width="25" height="25" viewBox="0 0 24 24" fill="none"><path d="m12 2 2.7 6.3L21 11l-6.3 2.7L12 20l-2.7-6.3L3 11l6.3-2.7L12 2Z" fill="currentColor"/><path d="m19 18 .8 1.8 1.7.7-1.7.7L19 23l-.8-1.8-1.7-.7 1.7-.7L19 18Z" fill="currentColor"/></svg></span>
+        <span>Cine<span class="brand-accent">Match</span></span>
+      </a>
+      <div class="top-links" role="navigation" aria-label="Main navigation">
+        <button type="button" id="navExplore" class="nav-link active">Explore</button>
+        <button type="button" id="navForYou" class="nav-link">For You <span id="navCount" class="nav-count">0</span></button>
+      </div>
+      <div class="header-right"><span class="mode-indicator"><span class="live-dot"></span><span id="datasetLabel">Loading model…</span></span></div>
+    </header>
+    <main>
+      <section class="hero" aria-labelledby="heroHeading">
+        <div class="hero-content">
+          <span class="eyebrow"><span class="tiny-star">✦</span> A SMARTER MOVIE NIGHT</span>
+          <h1 id="heroHeading">Less scrolling.<br /><span>More watching.</span></h1>
+          <p>Tell us a few movies you love. Our recommendation engine finds what you should watch next — and tells you why.</p>
+          <button type="button" id="heroStart" class="hero-button">Find your next favorite <span aria-hidden="true">↗</span></button>
+          <div class="hero-trust"><span class="trust-icons">✦ &nbsp; ◈ &nbsp; ◉</span><span>Real films. Explainable recommendations. No account needed.</span></div>
+        </div>
+        <div class="hero-visual" aria-hidden="true">
+          <div class="featured-card tilt-left"><div class="featured-art art-one"><span>✺</span></div><div class="featured-info"><small>A STORY WORTH DISCOVERING</small><strong>Great stories await.</strong></div></div>
+          <div class="featured-card tilt-right"><div class="featured-art art-two"><span>✦</span></div><div class="featured-info"><small>CURATED FOR YOUR TASTE</small><strong>Made for movie lovers.</strong></div></div>
+          <div class="floating-tag">✧ Powered by machine learning</div>
+        </div>
+      </section>
+      <section class="workspace" id="workspace">
+        <aside class="taste-panel" aria-labelledby="tasteHeading">
+          <div class="panel-title-row"><div><span class="overline">YOUR PERSONAL PROFILE</span><h2 id="tasteHeading">Your taste <span>✦</span></h2></div><span class="taste-count" id="tasteCount">0 / 8</span></div>
+          <p class="panel-desc">Select the movies you love. We'll use them to understand your taste.</p>
+          <div class="selection-wrap" id="selectedMovies"><div class="empty-taste"><span class="empty-orbit">✧</span><strong>Your taste starts here</strong><small>Add a few favorites from the movie library.</small></div></div>
+          <div class="taste-actions"><button type="button" id="exampleBtn" class="text-button">✧ Try an example taste</button><button type="button" id="clearBtn" class="text-button clear-button">Clear all</button></div>
+          <div class="taste-divider"></div>
+          <div class="settings-label"><strong>Recommendation style</strong><span id="balanceValue">65% genre / 35% audience</span></div>
+          <input id="balanceInput" class="blend-slider" type="range" min="0" max="100" value="65" aria-label="Percentage weight for genre similarity" />
+          <div class="slider-labels"><span>Audience patterns</span><span>Story & genres</span></div>
+          <p id="balanceHelp" class="setting-note">The model combines movie metadata with audience ratings.</p>
+          <button type="button" id="recommendBtn" class="primary-button" disabled>Find my movies <span aria-hidden="true">→</span></button>
+          <p class="privacy-line">◌ &nbsp; Your picks are saved only in this browser.</p>
+        </aside>
+        <div class="library-area">
+          <div id="exploreView">
+            <div class="library-head"><div><span class="overline">EXPLORE THE COLLECTION</span><h2>Find something you <em>love.</em></h2><p>Explore movies and add your favorites to your taste profile.</p></div><div class="results-count" id="resultsCount">Loading…</div></div>
+            <div class="filter-bar"><label class="search-wrap"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg><input id="searchInput" type="search" placeholder="Search by movie title..." autocomplete="off" aria-label="Search movie titles" /></label><div class="category-select"><label for="genreSelect">Genre</label><select id="genreSelect"><option value="">All genres</option></select></div></div>
+            <div id="movieGrid" class="movie-grid" aria-live="polite"></div>
+            <div class="center-action"><button type="button" id="loadMoreBtn" class="outline-button" hidden>Load more movies <span aria-hidden="true">↓</span></button></div>
+          </div>
+          <div id="recommendView" hidden>
+            <div class="library-head recommendations-head"><div><span class="overline">PERSONALIZED FOR YOU</span><h2>Movies you'll <em>connect with.</em></h2><p>Recommendations ranked by similarity to the films you selected.</p></div><button type="button" id="editTasteBtn" class="outline-button small">Edit your picks</button></div>
+            <div id="recommendGrid" class="movie-grid" aria-live="polite"></div>
+            <div class="recommend-disclaimer">✧ Rankings are similarity estimates, not predictions of whether you'll love a movie.</div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer class="footer"><span>Cine<span class="brand-accent">Match</span> <span class="footer-sep">/</span> Built with Python, FastAPI & scikit-learn</span><span id="footerSource">Loading catalog…</span></footer>
+  </div>
+  <div class="toast" role="status" id="toast"></div>
+  <script src="/static/app.js" defer></script>
+</body>
+</html>

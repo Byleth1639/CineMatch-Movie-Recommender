@@ -1,0 +1,9 @@
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.DS_Store
+.env
+# Download the MovieLens data separately to follow GroupLens terms.
+data/ml-latest-small/
+data/*.zip
