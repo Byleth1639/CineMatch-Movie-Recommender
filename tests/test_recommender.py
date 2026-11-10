@@ -100,3 +100,66 @@ def test_web_api_and_validation():
     assert client.post("/api/recommend",json={"liked_ids":[-9]}).status_code == 400
     assert client.post("/api/recommend",json={"liked_ids":[]}).status_code == 422
     assert client.get("/api/movies",params={"limit":99999}).status_code == 422
+
+
+def test_v2_demo_has_poster_urls_and_detail_fields():
+    model = MovieRecommender(ROOT / "data")
+    movie = model.movie(model.id_to_idx[1])
+    assert movie["poster_url"].startswith("https://image.tmdb.org/t/p/w342/")
+    assert movie["overview"]
+    assert movie["catalog_rating"] is None  # demo does NOT invent star ratings
+    assert model.stats()["posters_count"] >= 10
+    detail = client.get("/api/movie/1").json()
+    assert 0 < len(detail["similar"]) <= 6
+    assert all(result["id"] != 1 for result in detail["similar"])
+
+
+def test_clean_catalog_filters_invalid_and_retains_metadata():
+    from scripts.prepare_catalog import clean_catalog
+    valid = []
+    for i in range(130):
+        valid.append({
+            "adult": "False", "id": str(5000 + i), "title": f"Example Film {i}",
+            "genres": "[{'id': 18, 'name': 'Drama'}, {'id': 12, 'name': 'Adventure'}]",
+            "release_date": "2009-04-20", "poster_path": "/1234567890abcd.jpg",
+            "overview": "An example film with a plot long enough to pass the import checks.",
+            "vote_count": 100 + i, "vote_average": 7.5,
+            "popularity": 2.0, "runtime": 110, "tagline": "An example.",
+            "original_language": "en", "status": "Released",
+        })
+    valid.append({**valid[0], "id": "not-an-int"})
+    valid.append({**valid[0], "id": "1000000", "poster_path": "http://evil.example/x"})
+    data = clean_catalog(pd.DataFrame(valid), limit=110)
+    assert len(data) == 110
+    assert data["movieId"].is_unique
+    assert data["genres"].str.contains("Drama\\|Adventure").all()
+    assert data["title"].str.endswith("(2009)").all()
+    assert data["poster_path"].str.startswith("/").all()
+
+
+def test_expanded_catalog_uses_tmdb_metadata_and_search(tmp_path):
+    import csv
+    with (tmp_path / "catalog.csv").open("w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=["movieId", "title", "genres", "poster_path", "overview",
+                                                  "tagline", "runtime", "vote_average", "vote_count", "popularity"])
+        writer.writeheader()
+        writer.writerows([
+            {"movieId": 862, "title": "Toy Story (1995)", "genres": "Adventure|Animation|Comedy",
+             "poster_path": "/rhIRbceoE9lR4veEXuwCC2wARtG.jpg", "overview": "Two toys learn to be friends.",
+             "tagline": "", "runtime": 81, "vote_average": 7.7, "vote_count": 5415, "popularity": 20.0},
+            {"movieId": 101, "title": "Robot Story (1996)", "genres": "Adventure|Animation|Comedy",
+             "poster_path": "", "overview": "Two friendly robots learn about teamwork.",
+             "tagline": "", "runtime": 88, "vote_average": 6.5, "vote_count": 100, "popularity": 10.0},
+            {"movieId": 102, "title": "Scary Story (2001)", "genres": "Horror|Thriller",
+             "poster_path": "", "overview": "A scary mystery film.",
+             "tagline": "", "runtime": 92, "vote_average": 6.0, "vote_count": 50, "popularity": 4.0},
+        ])
+    model = MovieRecommender(tmp_path)
+    assert model.source == "catalog"
+    assert model.stats()["movie_count"] == 3
+    assert model.browse(search="toy story")[1] == 1
+    movie = model.movie(model.id_to_idx[862])
+    assert movie["catalog_rating"] == 7.7
+    assert movie["tmdb_url"].endswith("/862")
+    assert "poster" in movie["poster_url"] or movie["poster_url"].startswith("https://image.tmdb.org")
+    assert model.recommend([862], limit=1)[0]["id"] == 101

@@ -4,6 +4,7 @@ __pycache__/
 .pytest_cache/
 .DS_Store
 .env
-# Download the MovieLens data separately to follow GroupLens terms.
+# MovieLens is optional and not redistributed; review GroupLens terms separately.
 data/ml-latest-small/
 data/*.zip
+# Keep data/catalog.csv if you generated it locally: it is the deploy-ready metadata.

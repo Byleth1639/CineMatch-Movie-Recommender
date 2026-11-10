@@ -1,164 +1,145 @@
-# ✦ CineMatch — Movie Recommendation System
+# CineMatch v2 — movie recommendation system
 
-A working, explainable **machine-learning movie recommender** built with **Python, FastAPI, scikit-learn, pandas, SciPy, and vanilla JavaScript**. Choose movies you like, and CineMatch ranks similar titles and explains each recommendation. No API key, paid service, login, or front-end build tool is required.
+**A real web app with explainable ML recommendations, movie posters, movie details, a large searchable catalog, and a responsive cinema-style interface.** Python · FastAPI · scikit-learn · pandas · vanilla JavaScript.
 
-> **Two data modes:** The included catalog has 257 real movie titles with manually curated genres/years (no fabricated user ratings), so the site works immediately without internet. You can optionally download the official **MovieLens latest-small** dataset to add roughly 9,700 movies and 100,000 actual user ratings for hybrid recommendations. The data is not shipped in this repo in accordance with GroupLens licensing considerations.
+### What's new
 
-## 1. Run the app (Windows / macOS / Linux)
+- **Real movie posters** displayed from TMDB's image CDN, with automatic styled placeholders for missing or blocked images.
+- **Up to 8,000 searchable movies** when you run the included metadata import. The source is a *historical* TMDB snapshot, mostly movies from 2017 and earlier, **not a continuously updated feed**. Exactly how many movies pass the filters is reported by `/api/meta` after import.
+- **Redesigned responsive website** featuring a poster hero, rich cards, search, genre chips, pagination, watchlist and recommendation screens.
+- **Movie detail popups** with synopsis, release year, genres, runtime, TMDB community score (out of 10), TMDB link, and similar titles when metadata exists.
+- **Same explainable recommender**, now also able to match plot descriptions, taglines and genres. The model uses TF-IDF vectors + cosine similarity. Optional historical MovieLens user ratings add item-based collaborative filtering.
+- **No API key, account, or database required** to run the website. Internet is required for *external poster images* and to import the large catalog; small fallback demo works offline.
 
-**Windows shortcut:** Install Python 3.10+ if needed, then double-click `START_HERE_WINDOWS.bat`. It creates a virtual environment, installs packages, and starts the app. Open **http://127.0.0.1:8000**.
+## Very important: How many movies and pictures will I see?
 
-For manual setup on Windows, macOS, or Linux: open a terminal in the `CineMatch_Movie_Recommender` folder.
+| Mode | Movies | Posters | Recommendation method |
+|---|---:|---|---|
+| Offline demo (included) | 257 | 12 known poster links, others use designed placeholders | Content-based |
+| Expanded metadata catalog (run import) | Up to 8,000 | Poster links for all imported movies, subject to CDN availability | Content-based, including plots |
+| With optional MovieLens ratings | Depends on the catalog | As above | Hybrid content + collaborative filtering |
+
+The expanded metadata is **not shipped inside this ZIP**. Run the import below once or configure it in the Render build command to enable the large catalog. The historical snapshot **does not include recent films past 2017**, except for selected titles in the fallback demo. CineMatch does not claim current-release coverage, ML accuracy, or predicted audience ratings.
+
+## 1. Launch on Windows
+
+1. Extract the ZIP.
+2. Open the `CineMatch_Movie_Recommender` folder.
+3. Double-click `START_HERE_WINDOWS.bat` (Python 3.10+).
+4. Open <http://127.0.0.1:8000>.
+
+At this stage you can already browse 257 movies and see several real posters.
+
+### Expand the catalog locally (recommended)
+
+With the app directory open in PowerShell:
+
+```powershell
+# Install packages if you haven't started the app yet
+py -3 -m pip install -r requirements.txt
+
+# Download public movie metadata and generate data/catalog.csv
+py -3 scripts/prepare_catalog.py --download
+
+# Restart the application
+py -3 -m uvicorn app.main:app --reload
+```
+
+Or double-click **`EXPAND_CATALOG_WINDOWS.bat`** after installing packages. You can also download `movies_metadata.csv` directly from [The Movies Dataset on Kaggle](https://www.kaggle.com/datasets/rounakbanik/the-movies-dataset), then run:
+
+```powershell
+py -3 scripts/prepare_catalog.py --input "C:\path\to\movies_metadata.csv"
+```
+
+The importer cleans messy rows, validates poster paths and title metadata, filters low-signal records, keeps the most widely rated movies, and writes only the useful fields to `data/catalog.csv`. By default it selects **up to 8,000** titles, not a guaranteed exact total.
+
+**Source is historic:** It is based on *The Movies Dataset* (a TMDB metadata snapshot from 2017). It does not magically add 2026 movies. The included 257-title fallback contains some later films.
+
+## 2. Update your existing GitHub & Render site
+
+**Don't create a second Render service.** Extract this ZIP, copy its *contents* over the files in your existing `CineMatch-Movie-Recommender` repository folder, and overwrite matching files. Preserve the existing `.git` directory.
+
+In PowerShell opened in your existing repository:
+
+```powershell
+git add -A
+git commit -m "Upgrade CineMatch UI, posters, details and catalog"
+git push origin main
+```
+
+Your existing Render auto-deploy will update the UI. **To make it load the large catalog**, go to your Render service → **Settings → Build & Deploy → Build Command** and set exactly:
 
 ```bash
-python -m venv .venv
+pip install -r requirements.txt && python scripts/prepare_catalog.py --download
 ```
 
-Activate the environment:
-
-- **Windows PowerShell:** `.venv\Scripts\Activate.ps1`
-- **Windows CMD:** `.venv\Scripts\activate.bat`
-- **macOS / Linux:** `source .venv/bin/activate`
-
-Install requirements and start:
+Leave **Start Command** as:
 
 ```bash
-pip install -r requirements.txt
-uvicorn app.main:app --reload
-```
-
-Open **http://127.0.0.1:8000** in your browser. You can also inspect the API at **http://127.0.0.1:8000/docs**.
-
-If Windows PowerShell blocks activation, skip activation and run `.venv\Scripts\python.exe -m pip install -r requirements.txt` and `.venv\Scripts\python.exe -m uvicorn app.main:app --reload`.
-
-## 2. Unlock hybrid recommendations using real MovieLens ratings (optional, recommended)
-
-1. Review the **[GroupLens MovieLens data page](https://grouplens.org/datasets/movielens/)** and **[latest-small README/license](https://files.grouplens.org/datasets/movielens/ml-latest-small-README.html)**. This dataset has non-commercial usage restrictions.
-2. If you accept those terms, run:
-
-   ```bash
-   python scripts/download_movielens.py --accept-license
-   ```
-
-3. Stop and restart the server (`Ctrl+C`, then `uvicorn app.main:app --reload`). The header changes from **OFFLINE DEMO** to **MOVIELENS LIVE**. The site now computes recommendations from both genre/tag metadata and actual collaborative ratings.
-
-If the automatic download is blocked on your network, download `ml-latest-small.zip` through the official GroupLens page and extract it into `data/`, so you have `data/ml-latest-small/movies.csv` and `data/ml-latest-small/ratings.csv` (plus `tags.csv`). Then restart.
-
-The MovieLens ratings are **historical** (dataset generated in 2018), not live movie popularity. Do not use MovieLens for a commercial site without permission. Do not commit the `data/ml-latest-small/` directory to a public repository without checking the terms.
-
-## 3. How does the recommendation algorithm work?
-
-### A. Content-based filtering (works offline)
-
-Each movie is represented by a text document made from its **genres + decade** (and optional MovieLens tags). `TfidfVectorizer` learns a weighted feature vector. **Cosine similarity** measures how closely two films' features match. For multiple liked movies, CineMatch combines maximum and mean similarity to avoid ignoring different interests.
-
-Example: If you select *Interstellar* and *Arrival*, a sci-fi film is likely to rank above a pure romantic comedy because their weighted genre features are more alike.
-
-### B. Collaborative filtering (MovieLens mode)
-
-MovieLens includes historical movie ratings from users. The engine builds a **sparse movie × user matrix** using positive ratings (≥3.5/5), then measures cosine similarity between user-preference patterns. It gives weight to movies liked by viewers who also liked your selections.
-
-Instead of constructing a huge N×N movie similarity matrix, it computes similarities to **only the selected movies at request time**, saving memory.
-
-### C. Hybrid ranking
-
-When collaborative ratings are available, the ranking formula is approximately:
-
-```
-final_score = 0.93 * (w * content_similarity + (1-w) * collaborative_similarity)
-            + 0.07 * popularity_adjustment
-```
-
-Here `w` is the slider (0 to 1). The small popularity adjustment uses a rating average **shrunk toward the global mean** for films with few ratings. The scores are *similarity rankings*, **not** probabilities that a user will like a movie.
-
-### D. Explanations
-
-Each recommendation includes a short reason, such as shared genres or similar MovieLens audience preferences. These reasons are derived from real metadata and model similarities, **not generated by an LLM**.
-
-## 4. Project structure
-
-```
-CineMatch_Movie_Recommender/
-├── app/
-│   ├── main.py                # FastAPI endpoints, validation, static hosting
-│   ├── recommender.py         # ML similarity engine, hybrid ranking
-│   └── static/
-│       ├── index.html         # Accessible, responsive UI
-│       ├── styles.css         # Design and mobile layout
-│       └── app.js             # Search, favorites, API integration
-├── data/
-│   └── demo_movies.csv        # Real titles, manually curated genres, no ratings
-├── scripts/
-│   ├── download_movielens.py  # Optional official MovieLens downloader
-│   └── make_demo_catalog.py   # Rebuild included demo catalog
-├── LEARN_THE_PROJECT.md       # Six-day guide to understand every concept
-├── tests/
-│   └── test_recommender.py    # Recommendation + API tests
-├── START_HERE_WINDOWS.bat     # Simple Windows startup
-├── Dockerfile                 # Optional container deployment
-├── requirements.txt
-└── README.md
-```
-
-**API:** `GET /api/meta`, `GET /api/movies?search=...&genre=...`, `GET /api/movie/{id}`, `POST /api/recommend`, `GET /api/health`. Pydantic checks request shape, IDs, limits, and weight bounds. The UI stores liked movie IDs in localStorage; it does not have accounts or a database.
-
-## 5. Run tests
-
-```bash
-pip install pytest httpx
-python -m pytest -q
-```
-
-These cover movie loading, genre/title filtering, personalized ranking, excluding liked titles, score sorting, handling invalid IDs, actual hybrid-matrix calculations on a small test fixture, and HTTP response validation. The tiny fixture ratings are **synthetic test inputs only** and are never shown as real user data in the UI.
-
-## 6. Evaluate with real ratings (optional)
-
-After downloading MovieLens, run:
-
-```bash
-python scripts/evaluate.py --users 100 --k 10
-```
-
-The script removes a positive rating from each test user's training data, then compares **HitRate@10** against a popularity-only baseline. Results depend on your dataset and split; **no metric is claimed without running the evaluation**. See [LEARN_THE_PROJECT.md](LEARN_THE_PROJECT.md) for a guided explanation.
-
-## 7. Deploy (optional)
-
-A `Dockerfile` is included. Run locally:
-
-```bash
-docker build -t cinematch .
-docker run --rm -p 8000:8000 cinematch
-```
-
-You can deploy the repository to a Python web hosting service using the start command:
-
-```
 uvicorn app.main:app --host 0.0.0.0 --port $PORT
 ```
 
-The default Docker image ships **only** the small demo catalog. If you want MovieLens data on a hosted instance, review licensing conditions and arrange for a permitted source at runtime. Hosting plans, free tier limits, and data distribution permissions vary by provider.
+Now select **Manual Deploy → Deploy latest commit**. In the Render logs, look for `Created /opt/render/project/src/data/catalog.csv with X movies` (actual directory varies). Once running, `/api/meta` will say `"source":"catalog"` and show your exact count. If the dataset mirror is blocked or unavailable, that build command will fail; download the Kaggle metadata on your own computer, run `prepare_catalog.py --input ...`, commit `data/catalog.csv`, and change the Build Command back to `pip install -r requirements.txt`.
 
-## 8. Explain this in an interview
+**Alternative:** A `render.yaml` Blueprint is included for a *new* Render service. If you already have one, editing its settings is easier.
 
-**20-second version:** “I built a movie recommender with Python and FastAPI. It converts movie genres and metadata into TF-IDF vectors, uses cosine similarity to find related films, and optionally combines those scores with real MovieLens user-rating patterns. The frontend lets users select their favorites and explains why each result was suggested.”
+The CDN must be reachable from users' browsers for posters to load. A placeholder appears on failed images. No key is needed just to construct CDN image URLs from downloaded poster paths.
 
-**Be able to answer:**
+## 3. How recommendations work (important for interviews)
 
-- **What is TF-IDF?** A way of weighing features so common features have less impact than distinctive ones.
-- **What is cosine similarity?** The similarity of two vectors' directions, ranging from -1 to 1 for general vectors (nonnegative feature vectors here).
-- **What is collaborative filtering?** Finding recommendations from overlaps in historical user preferences.
-- **Why sparse matrices?** Most users haven't rated most movies, so storing all missing ratings wastes memory.
-- **What's the cold-start problem?** With no user selections, CineMatch cannot personalize; it prompts users to choose films. Movies with no rating history can still be recommended by content features.
-- **How do you know it works?** Unit tests verify ranking, personalization, API behavior, and exclusion of selected movies. **No offline ranking-quality benchmark is claimed** yet.
+1. Each movie gets a text document using its *genres, release decade, plot and tagline* (where available).
+2. `TfidfVectorizer` converts these descriptions into weighted numerical feature vectors.
+3. `cosine similarity` compares a user's 1–8 liked movies with other films.
+4. CineMatch combines closest-match and average-match similarities, ranks other titles and explains the overlapping genres or stories.
+5. If you separately enable MovieLens ratings, positive ratings form a sparse movie × user matrix. Shared historical viewers provide a secondary collaborative similarity signal.
 
-### Honest resume bullets (only use after you can explain the work)
+**TMDB community rating ≠ MovieLens rating ≠ recommendation score.** TMDB community scores are out of 10 and displayed with the film; MovieLens historical user ratings are out of 5, and the model similarity score only ranks related movies. There is no model-generated rating or fabricated user data.
 
-- Built a movie recommendation web application using Python, FastAPI, scikit-learn, and JavaScript, featuring title search, genre filters, and personalized rankings.
-- Implemented TF-IDF/cosine-similarity content filtering and optional item-based collaborative filtering using sparse MovieLens user-rating data.
-- Designed transparent recommendation explanations and a responsive interface with locally stored favorites; added automated unit and API tests.
+### Optional historical MovieLens ratings
 
-**Do not claim** you trained a neural network, fine-tuned an LLM, generated movie posters, achieved a specific accuracy rate, or deployed to production. This project uses classical ML and intentionally abstract poster art.
+Read [GroupLens terms](https://grouplens.org/datasets/movielens/) and [latest-small README](https://files.grouplens.org/datasets/movielens/ml-latest-small-README.html) before use. For non-commercial research/educational use, you can run:
 
-## Dataset attribution
+```bash
+python scripts/download_movielens.py --accept-license
+```
 
-MovieLens is provided by GroupLens Research at the University of Minnesota. If you use the optional dataset, cite: Harper, F. M. & Konstan, J. A. (2015), *The MovieLens Datasets: History and Context*, ACM Transactions on Interactive Intelligent Systems, 5(4), https://doi.org/10.1145/2827872. MovieLens has separate usage terms; consult GroupLens.
+When `data/catalog.csv` is present, the project joins MovieLens `links.csv` with TMDB IDs to match ratings to catalog titles. Restart the server after changing datasets. Do **not** commit `data/ml-latest-small/` without reviewing GroupLens distribution terms. Render by default does not download MovieLens.
+
+## 4. Run and test manually
+
+```bash
+pip install -r requirements.txt
+pip install pytest httpx
+python -m pytest -q
+uvicorn app.main:app --reload
+```
+
+Check <http://127.0.0.1:8000/docs> and <http://127.0.0.1:8000/api/meta>.
+
+**Smoke test:** Browse movies and check poster loading, search `Inception`, click a poster to open details, add 2–3 favorites, select **Find my matches**, then reopen a recommended movie. Try the website on a phone-sized screen as well.
+
+## 5. Code map
+
+```text
+app/main.py                   FastAPI routes and JSON validation
+app/recommender.py            TF-IDF, cosine similarity, collaborative filtering
+app/static/index.html        Site sections and accessible details dialog
+app/static/styles.css        Responsive cinema-inspired design
+app/static/app.js            Browser state, movie cards, local favorites, detail popups
+scripts/prepare_catalog.py   Clean and import historical movie metadata
+scripts/download_movielens.py  Optional MovieLens (read its license)
+data/demo_movies.csv          257-film fallback; a few known poster links
+render.yaml                   Blueprint configuration for a new Render service
+Dockerfile                   Optional container deployment
+LEARN_THE_PROJECT.md          Beginner study guide
+```
+
+**API:** `GET /api/health`, `GET /api/meta`, `GET /api/movies?search=&genre=&offset=&limit=`, `GET /api/movie/{id}`, `POST /api/recommend`.
+
+## 6. Source and rights
+
+The large metadata input comes from [The Movies Dataset by Rounak Banik](https://www.kaggle.com/datasets/rounakbanik/the-movies-dataset), credited to TMDB; the source dataset was published under CC0, but imagery and TMDB trademarks have separate rights. No poster artwork is bundled. Image URLs point to [TMDB](https://www.themoviedb.org) and must respect [TMDB's attribution and non-commercial rules](https://developer.themoviedb.org/docs/faq). CineMatch includes the required TMDB logo and notice in the footer. **Do not use film images or TMDB data commercially without verifying licensing.** MovieLens has separate GroupLens terms.
+
+## 7. Resume note
+
+Accurate after you understand the code: “Built a FastAPI movie recommender that uses TF-IDF and cosine similarity to rank films across a cleaned movie metadata catalog, featuring poster-based discovery, search, personalized watchlists, and transparent recommendation explanations.” Don't claim you trained a neural network, fine-tuned a generative model, achieved an accuracy percentage, or use live 2026 catalog updates.

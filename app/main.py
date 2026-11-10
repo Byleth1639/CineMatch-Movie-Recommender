@@ -11,7 +11,7 @@ from pydantic import BaseModel, Field
 from app.recommender import MovieRecommender
 
 HERE = Path(__file__).resolve().parent
-app = FastAPI(title="CineMatch", version="1.0.0",
+app = FastAPI(title="CineMatch", version="2.0.0",
               description="An explainable movie recommender with optional MovieLens hybrid filtering")
 app.mount("/static", StaticFiles(directory=HERE / "static"), name="static")
 
@@ -59,7 +59,9 @@ def movie_detail(movie_id: int):
     index = recommender.id_to_idx.get(movie_id)
     if index is None:
         raise HTTPException(status_code=404, detail="Movie not found")
-    return recommender.movie(index)
+    result = recommender.movie(index)
+    result["similar"] = recommender.recommend([movie_id], limit=6)
+    return result
 
 
 @app.post("/api/recommend")

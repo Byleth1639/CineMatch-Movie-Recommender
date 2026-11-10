@@ -1,74 +1,25 @@
-# Learn CineMatch step by step (for a sophomore CS student)
+# Learn CineMatch in 6 short sessions
 
-You don't need to know ML before starting. Work through these steps **in this order** and actually change some code. If you cannot explain a line on your resume, don't claim you designed or implemented it yourself.
+You said you want to understand your resume projects instead of just launching them. Follow each task by reading the named source file and trying it yourself.
 
-## Day 1 — Understand the data (30–45 minutes)
+**Day 1 — What data do I have?** Read `data/demo_movies.csv`, then `scripts/prepare_catalog.py`. Learn `movieId`, genres, a plot, poster path and TMDB vote count. Visit `/api/meta` to see if you're in `demo`, `catalog` or `movielens` mode. The historical metadata snapshot is not a current TMDB feed.
 
-Open `data/demo_movies.csv`. Each row is a movie, with an ID, title, and genre list. There are **no user ratings** in this demo. Start the site, search for *Interstellar*, and click `+` to add it. Read the recommendation explanation. Choose *The Notebook* instead; notice how the recommendations change.
+**Day 2 — What is TF-IDF?** Read the corpus and `TfidfVectorizer` lines in `app/recommender.py`. Try comparing the genres of *Inception*, *Interstellar* and *The Notebook*. More distinctive words get larger weights; plot words are useful alongside genres.
 
-**Key idea:** A machine-learning system needs input features. For the offline demo, they are **genres and release decade**, not plot summaries or posters.
+**Day 3 — Why cosine similarity?** Find `recommend()` in `app/recommender.py`. It compares sparse vectors without computing every movie-vs-movie pair in advance. Search for `@ self.content.T`. Explain why a Sci-Fi movie tends to rank well for a Sci-Fi favorite.
 
-## Day 2 — Understand the API (30–45 minutes)
+**Day 4 — What does the backend do?** Read `app/main.py`. The GET endpoints send JSON data. POST `/api/recommend` receives up to eight IDs and validates them. Use `/docs` to make a request and inspect the JSON response.
 
-Start the Python server and open `http://127.0.0.1:8000/docs`. Try:
+**Day 5 — How does the UI work?** Read `app/static/app.js`. Trace a + click through `toggle()` and `updateChoices()`, then a recommendation through `recommend()`. Watch how movie details are fetched on demand and how browser `localStorage` remembers picks.
 
-```
-GET /api/movies?search=Interstellar
-```
+**Day 6 — How do I know it's correct?** Run `python -m pytest -q`. Add a movie and check it is excluded from its own recommendation list. Explain the difference between a TMDB community rating out of 10, an optional MovieLens rating out of 5, and a similarity score that is neither one.
 
-Then try the `POST /api/recommend` endpoint with:
+## Five interview questions
 
-```json
-{"liked_ids": [1, 2], "limit": 5, "content_weight": 0.65}
-```
+1. **Why TF-IDF?** It creates sparse numeric vectors that express how distinctive movie words are, without the complexity of training a neural network.
+2. **Why cosine similarity?** It compares vector directions, letting related movies rank together even if their descriptions vary in length.
+3. **What is cold start?** You cannot personalize until the viewer selects favorites; content-based filtering can still recommend films with no historical audience ratings.
+4. **How does hybrid recommendation work?** Optional MovieLens ratings add a sparse movie/user interaction similarity, blended with plot/genre similarity.
+5. **What is a limitation?** The free historical metadata snapshot ends in 2017, and a content-based model may over-recommend similar genres. External poster images can fail to load.
 
-Trace `app/main.py` to `app/recommender.py`. The website is only a frontend that calls these endpoints. The backend decides the ranking.
-
-## Day 3 — Understand the ML (45–60 minutes)
-
-Read `app/recommender.py` and look for:
-
-- `TfidfVectorizer`: Turns genre words into numeric vectors.
-- `normalize`: Changes vectors to length 1 so dot products become cosine similarity.
-- `content_sim`: Dot products between selected movies and all candidate movies.
-- `np.argsort(-score)`: Sorts movies from highest to lowest ranking score.
-- `score[seed_indices] = -np.inf`: Removes already selected movies from recommendations.
-
-**Experiment:** Change `content_score = .55 * ... + .45 * ...` to `.8 * ... + .2 * ...` and compare recommendations from three different favorite films. You're changing how much the best-matching favorite influences the results.
-
-## Day 4 — Understand collaborative filtering (45–60 minutes)
-
-Download the optional MovieLens data using the README instructions. Restart the app. Now `app/recommender.py` loads historical `ratings.csv` and builds a sparse movie-by-user matrix. An entry means a user rated that movie positively. Similar patterns across users increase the collaborative similarity between movies.
-
-Move the **recommendation style** slider to compare genre similarity against audience patterns. Explain why two movies can have different genres but still attract similar audiences.
-
-## Day 5 — Measure the model (30–45 minutes)
-
-Run:
-
-```
-python scripts/evaluate.py --users 100 --k 10
-```
-
-It removes one positive rating per test user before training and checks whether the held-out movie appears in the top 10. Compare CineMatch to a baseline that just recommends popular movies. This is a basic experiment, **not** a proof that the algorithm is universally better. Do not claim an accuracy number until you actually run this command.
-
-## Day 6 — Make a change of your own
-
-Choose one practical improvement, implement it, and add a test. Ideas:
-
-- Support disliked movies and penalize similar recommendations.
-- Add an endpoint that lists the top 10 movies in a selected genre.
-- Make a poster placeholder style that visually distinguishes genres.
-- Compare a content-only model against the hybrid approach using held-out ratings.
-
-## How to explain CineMatch in an interview
-
-**Question: What did you build?** “A movie recommendation website. It uses the movies a user selects to find similar movies through a machine-learning model.”
-
-**Question: How does it make recommendations?** “I represent each movie using a numeric feature vector from its genres and release decade. Cosine similarity gives a similarity score. With MovieLens data, I combine that with patterns from user ratings.”
-
-**Question: How is this AI?** “It uses classical machine-learning techniques to transform features and rank similar items. It doesn't call a generative AI API or train a neural network.”
-
-**Question: What are the limitations?** “The demo has only manually curated metadata. MovieLens gives historical preferences, not current preferences. With no user favorites, there's no personalized profile. Genre-based matches cannot fully understand plots, themes, or moods.”
-
-**Question: What did YOU build?** Be specific about the code you personally reviewed, changed, tested, and understood. Using AI tools to help produce code doesn't mean you should claim independent design work you haven't done.
+**Practice explaining this:** “The browser sends my chosen movie IDs to FastAPI. The Python model converts the movie metadata into TF-IDF vectors, compares the vectors with cosine similarity, ranks related titles, and returns results with explanations.”
