@@ -1,5 +1,5 @@
 movieId,title,genres,poster_path,overview,tagline,runtime,vote_average,vote_count,popularity,original_language
-1,Inception (2010),Action|Sci-Fi|Thriller,/oYuLEt3zVCKq57qu2F8dT7NIa6f.jpg,"A specialist who steals secrets through shared dreams is hired to plant an idea in the mind of a powerful heir. The deeper his team travels into layered dreams, the harder it becomes to tell what is real.",,,,,,
+1,Inception (2010),Action|Sci-Fi|Thriller,/xlaY2zyzMfkhk0HSC5VUwzoZPU1.jpg,"A specialist who steals secrets through shared dreams is hired to plant an idea in the mind of a powerful heir. The deeper his team travels into layered dreams, the harder it becomes to tell what is real.",,,,,,
 2,Interstellar (2014),Adventure|Drama|Sci-Fi,/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg,"With Earth becoming uninhabitable, a team of astronauts travels through a wormhole to search for a new home for humanity. A father must choose between his mission and the family he leaves behind.",,,,,,
 3,The Dark Knight (2008),Action|Crime|Drama,/qJ2tW6WMUDux911r6m7haRef0WH.jpg,"As Gotham struggles with organized crime, Batman confronts a criminal mastermind who turns the city against itself and tests the limits of the hero’s moral code.",,,,,,
 4,The Dark Knight Rises (2012),Action|Crime|Drama,/hr0L2aueqlP2BYUblTTjmtn0hw4.jpg,,,,,,,
@@ -193,7 +193,7 @@ movieId,title,genres,poster_path,overview,tagline,runtime,vote_average,vote_coun
 192,The Batman (2022),Action|Crime|Drama,,,,,,,,
 193,Joker (2019),Crime|Drama|Thriller,,,,,,,,
 194,Logan (2017),Action|Drama|Sci-Fi,,,,,,,,
-195,The Avengers (2012),Action|Adventure|Sci-Fi,,,,,,,,
+195,The Avengers (2012),Action|Adventure|Sci-Fi,/RYMX2wcKCBAr24UyPD7xwmjaTn.jpg,,,,,,,
 196,Black Panther (2018),Action|Adventure|Sci-Fi,,,,,,,,
 197,Wonder Woman (2017),Action|Adventure|Fantasy,,,,,,,,
 198,1917 (2019),Drama|War,,,,,,,,

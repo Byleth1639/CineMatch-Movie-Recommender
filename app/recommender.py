@@ -56,6 +56,26 @@ class MovieRecommender:
         self.genre_search = [set(g.casefold() for g in row) for row in self.genres]
         self.poster_paths = [str(v) if POSTER_PATTERN.fullmatch(str(v)) else ""
                              for v in movies.get("poster_path", pd.Series([""]*len(movies)))]
+        # Our hand-curated offline demo includes a few up-to-date poster paths.
+        # Prefer those for IDENTICAL title + year in the larger historical catalog.
+        # Movie IDs cannot be matched here: demo IDs and TMDB IDs are different.
+        if self.source == "catalog":
+            demo_path = self.data_dir / "demo_movies.csv"
+            if demo_path.is_file():
+                demo = pd.read_csv(demo_path).fillna("")
+                current = {str(row.title): str(row.poster_path) for row in demo.itertuples()
+                           if POSTER_PATTERN.fullmatch(str(row.poster_path))}
+                self.poster_paths = [current.get(str(title), path)
+                                     for title, path in zip(movies["title"], self.poster_paths)]
+                # Two extra first-page films not present in the demo's poster set.
+                # TMDB IDs are stable; never match only by ambiguous movie titles.
+                current_by_tmdb_id = {
+                    27205: "/xlaY2zyzMfkhk0HSC5VUwzoZPU1.jpg",  # Inception (2010)
+                    24428: "/RYMX2wcKCBAr24UyPD7xwmjaTn.jpg",  # The Avengers (2012)
+                    19995: "/kyeqWdyUXW608qlYkRqosgbbJyK.jpg",  # Avatar (2009)
+                }
+                self.poster_paths = [current_by_tmdb_id.get(int(mid), path)
+                                     for mid, path in zip(self.movie_ids, self.poster_paths)]
         self.overviews = [str(v) for v in movies.get("overview", pd.Series([""]*len(movies)))]
         self.taglines = [str(v) for v in movies.get("tagline", pd.Series([""]*len(movies)))]
         self.runtimes = pd.to_numeric(movies.get("runtime", pd.Series([0]*len(movies))),

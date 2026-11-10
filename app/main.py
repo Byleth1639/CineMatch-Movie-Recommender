@@ -9,9 +9,10 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 from app.recommender import MovieRecommender
+from app.posters import poster_auth_available, refreshed_poster
 
 HERE = Path(__file__).resolve().parent
-app = FastAPI(title="CineMatch", version="2.0.0",
+app = FastAPI(title="CineMatch", version="2.1.0",
               description="An explainable movie recommender with optional MovieLens hybrid filtering")
 app.mount("/static", StaticFiles(directory=HERE / "static"), name="static")
 
@@ -39,7 +40,21 @@ def health():
 
 @app.get("/api/meta")
 def metadata():
-    return model().stats()
+    return {**model().stats(),
+            "poster_refresh_enabled": model().source == "catalog" and poster_auth_available()}
+
+
+@app.get("/api/poster/{movie_id}")
+def refresh_poster(movie_id: int):
+    """Try an updated poster only for a known catalog movie, never expose a TMDB key."""
+    recommender = model()
+    if movie_id not in recommender.id_to_idx:
+        raise HTTPException(status_code=404, detail="Movie not found")
+    if recommender.source != "catalog":
+        raise HTTPException(status_code=404, detail="Poster refresh requires catalog mode")
+    if not poster_auth_available():
+        raise HTTPException(status_code=503, detail="Poster lookup is not configured")
+    return {"poster_url": refreshed_poster(movie_id)}
 
 
 @app.get("/api/movies")

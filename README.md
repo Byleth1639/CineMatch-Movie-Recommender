@@ -1,6 +1,52 @@
-# CineMatch v2 — movie recommendation system
+# CineMatch v2.1 — movie recommendation system
 
 **A real web app with explainable ML recommendations, movie posters, movie details, a large searchable catalog, and a responsive cinema-style interface.** Python · FastAPI · scikit-learn · pandas · vanilla JavaScript.
+
+## Poster fix in v2.1 — important
+
+The original 8,000-movie data source is a 2017 metadata snapshot. A valid-looking
+`poster_path` can point to a poster removed or replaced since then. The old UI
+simply hid broken images, so many movie cards displayed placeholders.
+
+**This update** keeps the exact same metadata/recommendation engine and 8,000-title
+import, but:
+
+1. Uses improved poster URLs for popular films through exact TMDB IDs and
+   curated exact title-and-year matches.
+2. Detects failed poster requests and (optionally) looks up an updated poster path
+   through the **official TMDB API**. The lookup runs in FastAPI so your token is
+   never sent to visitors. It happens only after an image actually fails.
+3. Reuses poster lookups across the page and leaves a readable placeholder if a
+   film still has no usable poster (not every film has one).
+4. Busts browser cache for the updated frontend JS/CSS.
+
+### To repair failed posters across the full 8,000-film catalog
+
+An **API Read Access Token** from [TMDB](https://www.themoviedb.org/settings/api)
+is needed to look up replacement poster paths. TMDB offers non-commercial API
+access subject to its terms; read the terms and register your own token.
+
+On Render: **your CineMatch Web Service → Environment → Add Environment Variable**:
+
+- **Key:** `TMDB_READ_ACCESS_TOKEN`
+- **Value:** your own *TMDB API Read Access Token* (long token, not a sample value)
+
+Save and deploy. This is a secret: **never put it in GitHub or in the JavaScript**.
+The previous Render Build Command and Start Command stay unchanged:
+
+```bash
+pip install -r requirements.txt && python scripts/prepare_catalog.py --download
+uvicorn app.main:app --host 0.0.0.0 --port $PORT
+```
+
+The two lines above are **separate** Render fields (Build Command then Start Command),
+not two lines to paste into one field. The catalog importer does NOT need an API key;
+only the optional replacement-poster lookups do.
+
+Without a key the app still works: popular poster overrides are included; old
+missing images still use the designed placeholders. Browser ad blockers, company
+firewalls, CDN outages, and movies with no TMDB poster can still cause missing
+images even with a key. The `/api/meta` JSON includes `poster_refresh_enabled`.
 
 ### What's new
 
@@ -15,7 +61,7 @@
 
 | Mode | Movies | Posters | Recommendation method |
 |---|---:|---|---|
-| Offline demo (included) | 257 | 12 known poster links, others use designed placeholders | Content-based |
+| Offline demo (included) | 257 | 13 known poster links, others use designed placeholders | Content-based |
 | Expanded metadata catalog (run import) | Up to 8,000 | Poster links for all imported movies, subject to CDN availability | Content-based, including plots |
 | With optional MovieLens ratings | Depends on the catalog | As above | Hybrid content + collaborative filtering |
 

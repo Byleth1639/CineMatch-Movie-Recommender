@@ -1,4 +1,4 @@
-/* CineMatch v2 — browser UI; all recommendations are computed by the Python API. */
+/* CineMatch v2.1 — browser UI; all recommendations are computed by the Python API. */
 (() => {
   'use strict';
   const $ = id => document.getElementById(id);
@@ -8,6 +8,37 @@
     '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
   })[c]);
   let searchTimer, toastTimer;
+  const posterLookups = new Map();
+  // Image load/error events do not bubble. Listen in the capture phase.
+  // When a historical CDN path fails, one server request fetches the latest
+  // TMDB poster_path. The credential stays in the FastAPI environment.
+  document.addEventListener('load', event => {
+    if(event.target.matches?.('.poster-frame img')) event.target.classList.add('loaded');
+  }, true);
+  document.addEventListener('error', async event => {
+    const img = event.target;
+    if(!img.matches?.('.poster-frame img')) return;
+    const id = Number(img.dataset.movieId);
+    if(img.dataset.retried==='1' || !state.meta?.poster_refresh_enabled || !id) {
+      img.remove();
+      return;
+    }
+    img.dataset.retried='1';
+    try {
+      if(!posterLookups.has(id)) {
+        posterLookups.set(id, api(`/api/poster/${id}`)
+          .then(data=>data.poster_url)
+          .catch(()=>null));
+      }
+      const replacement = await posterLookups.get(id);
+      if(!img.isConnected) return;
+      if(replacement && replacement !== img.src) {
+        img.src = replacement;
+      } else {
+        img.remove();
+      }
+    } catch { img.remove(); }
+  }, true);
   const palette = [
     ['#254567','#070e1d'],['#73413b','#15101b'],['#2d5b59','#0b1820'],
     ['#66518a','#15101d'],['#77614a','#14141d'],['#355767','#0b141c'],
@@ -29,7 +60,7 @@
     const fallback = `<div class="poster-placeholder" style="--poster-a:${color[0]};--poster-b:${color[1]}"><div class="placeholder-symbol">✦</div><div class="placeholder-title">${escapeHTML(movie.title)}</div><div class="placeholder-year">${escapeHTML(movie.year || 'CINEMA')}</div></div>`;
     if(!movie.poster_url) return `<div class="poster-frame ${extraClass}">${fallback}</div>`;
     const link=escapeHTML(movie.poster_url);
-    return `<div class="poster-frame ${extraClass}">${fallback}<img src="${link}" alt="${escapeHTML(movie.title)} movie poster" loading="lazy" decoding="async" onload="this.classList.add('loaded')" onerror="this.remove()"></div>`;
+    return `<div class="poster-frame ${extraClass}">${fallback}<img src="${link}" data-movie-id="${movie.id}" alt="${escapeHTML(movie.title)} movie poster" loading="lazy" decoding="async"></div>`;
   }
   function movieCard(movie, recommended=false, rank=0) {
     const selected=liked(movie.id);
